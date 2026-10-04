@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>イオン・周期表チャレンジ</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:"Noto Sans JP","Yu Gothic",sans-serif;background:linear-gradient(135deg,#eef6ff,#f8fafc);color:#172033}button{font:inherit;cursor:pointer}.app{max-width:1200px;margin:auto;padding:18px}.header{background:#fff;border:1px solid #dbe5f1;border-radius:20px;padding:18px 22px;box-shadow:0 8px 30px #29466d12;margin-bottom:18px}.header h1{margin:0;font-size:28px}.header p{margin:6px 0 0;color:#64748b}.screen{display:none}.screen.active{display:block}.card{background:#fff;border:1px solid #dbe5f1;border-radius:18px;padding:22px;box-shadow:0 8px 30px #29466d10;margin-bottom:16px}.home-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}.activity-card{border:2px solid #dbe5f1;border-radius:16px;padding:20px;background:#fff;text-align:left;transition:.2s}.activity-card:hover{transform:translateY(-3px);border-color:#60a5fa;box-shadow:0 8px 20px #2563eb18}.activity-card h3{margin:0 0 8px}.activity-card p{margin:0;color:#64748b;font-size:14px}.back{margin-bottom:12px;background:#e8eef7;border:0;border-radius:10px;padding:9px 14px}.primary,.success,.danger,.key,.solution-choice,.element-button{border:0;border-radius:10px;padding:10px 14px}.primary{background:#2563eb;color:#fff}.success{background:#16a34a;color:#fff}.danger{background:#dc2626;color:#fff}.primary:disabled,.success:disabled,.solution-choice:disabled{opacity:.45;cursor:not-allowed}.muted{color:#64748b}.stats{display:flex;gap:14px;flex-wrap:wrap}.stat{background:#f1f5f9;border-radius:12px;padding:10px 14px}.periodic-board{display:grid;grid-template-columns:repeat(18,minmax(32px,1fr));gap:4px;overflow:auto;padding-bottom:8px}.group-number{min-height:30px;border:1px solid #cbd5e1;border-radius:8px;background:#e0f2fe;color:#0f172a;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:12px}.pt-cell{min-height:64px;border:1px dashed #cbd5e1;border-radius:8px;background:#f8fafc;padding:4px;text-align:center;font-size:11px}.pt-cell.target{background:#fff}.pt-cell.correct{background:#dcfce7;border-color:#22c55e}.pt-cell.wrong{animation:shake .3s}.element-bank{display:flex;flex-wrap:wrap;gap:8px;margin-top:15px}.element-button{background:#eff6ff;border:1px solid #bfdbfe;min-width:75px}.element-button strong{font-size:20px}.element-button.used{opacity:.3}.quiz-target,.reaction-question{font-size:22px;font-weight:700;margin:18px 0}.input{width:100%;max-width:600px;padding:14px;border:2px solid #cbd5e1;border-radius:12px;font-size:20px}.keyboard{max-width:760px;margin:16px auto}.case-state{text-align:center;font-size:13px;color:#64748b;margin-bottom:7px}.keyrow{display:flex;gap:5px;justify-content:center;margin:5px 0;flex-wrap:wrap}.key{background:#f1f5f9;border:1px solid #cbd5e1;min-width:42px}.key.action{background:#dbeafe}.keyboard-label{display:inline-flex;align-items:center;padding:8px 10px;border-radius:8px;background:#fef3c7;color:#92400e;font-weight:700;font-size:12px}.quiz-result,.reaction-result{min-height:32px;margin:12px 0;font-size:18px}.choice-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px}.choice{padding:14px;border:2px solid #dbe5f1;border-radius:12px;background:#fff}.choice:hover{border-color:#60a5fa}.atom-area{display:flex;gap:20px;flex-wrap:wrap;align-items:center}.atom-view{width:430px;height:430px;position:relative;background:#f8fafc;border-radius:18px;border:1px solid #dbe5f1}.shell{position:absolute;border:2px solid #94a3b8;border-radius:50%;left:50%;top:50%;transform:translate(-50%,-50%)}.electron{position:absolute;width:22px;height:22px;border-radius:50%;background:#2563eb;color:#fff;font-size:11px;display:flex;align-items:center;justify-content:center;cursor:grab;transform:translate(-50%,-50%);z-index:4}.nucleus{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:70px;height:70px;border-radius:50%;background:#fee2e2;border:2px solid #ef4444;display:flex;align-items:center;justify-content:center;font-weight:700;z-index:5}.make-controls{display:flex;gap:8px;flex-wrap:wrap}.trash,.source{padding:15px;border-radius:14px;border:2px dashed #94a3b8;background:#fff;text-align:center}.ion-result{font-size:25px;font-weight:700}.noble-gas{opacity:.82;border-style:dashed}.noble-gas::after{content:'安定';display:block;font-size:11px;color:#64748b}.make-controls .disabled{opacity:.45;pointer-events:none}
+.particle-counts{margin-top:10px;padding:12px 16px;background:#f8fafc;border:1px solid #dbe5f1;border-radius:12px;display:flex;justify-content:center;gap:28px;font-size:18px}.particle-counts strong{font-size:22px;color:#2563eb}
+.charge-positive .nucleus{background:#fee2e2;border-color:#ef4444;color:#b91c1c;box-shadow:0 0 0 5px rgba(239,68,68,.18)}
+.charge-negative .nucleus{background:#dbeafe;border-color:#3b82f6;color:#1d4ed8;box-shadow:0 0 0 5px rgba(59,130,246,.18)}
+.charge-positive .electron{color:#b91c1c}
+.charge-negative .electron{color:#1d4ed8}
+.ion-formula{display:inline-block;margin-top:4px;font-size:24px;font-weight:700}.solution-controls{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}.solution-choice{background:#fff;border:2px solid #cbd5e1}.solution-choice.selected{border-color:#2563eb;background:#eff6ff}.beaker-wrap{display:flex;justify-content:center}.beaker{position:relative;width:min(900px,100%);height:500px;border:5px solid #60a5fa;border-top:0;border-radius:0 0 38px 38px;background:linear-gradient(to bottom,#effcff 0%,#dff6ff 100%);overflow:hidden}.water-molecule{position:absolute;z-index:2;width:24px;height:24px;border:2px solid #38bdf8;border-radius:50%;background:#ffffffaa;animation:waterFloat 3s ease-in-out infinite alternate}.solute{position:absolute;display:flex;align-items:center;justify-content:center;border-radius:50%;width:38px;height:38px;font-size:11px;font-weight:700;z-index:20;transition:left 3.5s ease,top 3.5s ease,transform .6s,opacity .6s}.solute.molecule{background:#fef3c7;border:2px solid #f59e0b;color:#92400e}.solute.cation{background:#dbeafe;border:2px solid #2563eb;color:#1d4ed8}.solute.anion{background:#fee2e2;border:2px solid #dc2626;color:#b91c1c}.electrode{position:absolute;top:125px;width:78px;height:290px;border-radius:12px;z-index:15;color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;font-weight:800;font-size:18px;transition:.4s;overflow:hidden}.cathode{left:5%;background:#475569;border:5px solid #1e293b}.anode{right:5%;background:#64748b;border:5px solid #334155}.electrode.powered{box-shadow:0 0 25px #facc15aa}.electrode small{font-size:13px}.electrode-label{position:relative;z-index:4;text-align:center;text-shadow:0 1px 2px #0008;background:#0f172aaa;padding:5px 6px;border-radius:8px}.copper-layer{position:absolute;z-index:2;left:5px;right:5px;bottom:5px;height:0;background:linear-gradient(180deg,#f0b27a 0%,#d97706 45%,#92400e 100%);border-radius:6px;opacity:.97;box-shadow:inset 0 0 0 2px #7c2d12,0 0 10px #f59e0b66;transition:height .7s ease}.copper-layer.active{height:calc(100% - 10px)}.circuit{height:112px;position:absolute;left:0;right:0;top:8px;z-index:55;pointer-events:none}.battery{position:absolute;left:50%;top:4px;transform:translateX(-50%);min-width:150px;background:#fff;border:3px solid #334155;border-radius:12px;padding:6px 13px;font-weight:800;text-align:center;box-shadow:0 3px 8px #0002}.battery-title{font-size:14px;line-height:1.1}.battery-terminals{display:flex;justify-content:space-between;gap:50px;margin-top:5px}.terminal{display:inline-flex;width:34px;height:28px;border-radius:8px;align-items:center;justify-content:center;color:#fff;font-size:20px;font-weight:900}.terminal.minus{background:#2563eb}.terminal.plus{background:#dc2626}.wire{position:absolute;background:#334155;border-radius:2px}.wire.neg-h{left:8.7%;right:calc(50% + 76px);top:24px;height:3px}.wire.neg-v{left:8.7%;top:24px;height:101px;width:3px}.wire.pos-h{left:calc(50% + 76px);right:8.7%;top:24px;height:3px}.wire.pos-v{right:8.7%;top:24px;height:101px;width:3px}.wire-label{position:absolute;top:52px;font-size:11px;font-weight:800;background:#fff;border:1px solid #cbd5e1;padding:3px 6px;border-radius:7px}.neg-label{left:7%}.pos-label{right:7%}.flow-label{position:absolute;top:82px;left:50%;transform:translateX(-50%);font-size:12px;font-weight:800;background:#fff;border:1px solid #cbd5e1;padding:3px 8px;border-radius:8px}.electron-flow{position:absolute;width:34px;height:26px;border-radius:15px;background:#1d4ed8;color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;z-index:50;transition:1.2s ease;pointer-events:none}.deposit,.gas{position:absolute;z-index:35;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800}.deposit{width:30px;height:20px;background:#d6d3d1;border:2px solid #78716c;color:#44403c}.gas{width:42px;height:42px;background:#dcfce7aa;border:2px solid #22c55e;color:#166534;transition:top 2s,opacity 2s}.gas-bubble{position:absolute;z-index:31;width:18px;height:18px;border:2px solid #22c55e;border-radius:50%;background:#dcfce755;box-shadow:inset -3px -3px 5px #fff8;pointer-events:none;animation:chlorineRise 2.4s ease-out forwards}.gas-bubble::after{content:'Cl₂';position:absolute;top:20px;left:-7px;font-size:9px;font-weight:800;color:#166534;white-space:nowrap}.electron-flow{box-shadow:0 2px 8px #1d4ed855}.electron-flow.circuit-electron{background:#1d4ed8;border:2px solid #bfdbfe}.reaction-box{background:#f8fafc;border:1px solid #dbe5f1;border-radius:14px;padding:14px;margin-top:14px}.countdown{font-size:30px;font-weight:800;color:#2563eb}.hidden{display:none!important}@keyframes waterFloat{to{transform:translate(5px,-5px)}}@keyframes chlorineRise{0%{transform:translateY(0) scale(.7);opacity:0}15%{opacity:1}100%{transform:translateY(-260px) translateX(18px) scale(1.15);opacity:.08}}@keyframes shake{25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}@media(max-width:700px){.app{padding:10px}.header h1{font-size:22px}.beaker{height:440px}.electrode{width:58px;height:250px;font-size:14px}.atom-view{width:100%;height:360px}.periodic-board{grid-template-columns:repeat(18,42px)}}
+
+.reaction-phenomenon{
+  margin-top:16px;padding:16px 12px;border:1px solid #dbe5f1;border-radius:14px;background:#f8fafc;
+}
+.phenomenon-title{font-weight:800;margin-bottom:14px;color:#334155;text-align:center}
+.phenomenon-stage{display:flex;flex-direction:column;align-items:center;gap:10px;min-height:145px}
+.phenomenon-label{font-size:14px;font-weight:700;color:#475569;background:#fff;border:1px solid #cbd5e1;border-radius:999px;padding:5px 12px}
+.phenomenon-row{display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;width:100%}
+.phenomenon-atom{position:relative;width:86px;height:86px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex:none}
+.phenomenon-atom.neutral{background:#f1f5f9;border:3px solid #64748b}
+.phenomenon-atom.cation{background:#fef2f2;border:3px solid #ef4444}
+.phenomenon-atom.anion{background:#eff6ff;border:3px solid #2563eb}
+.phenomenon-nucleus{width:54px;height:54px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;font-weight:900;font-size:17px;background:#fff;border:2px solid #94a3b8;z-index:2;line-height:1.05}
+.phenomenon-nucleus small{font-size:10px;margin-top:2px;font-weight:700}
+.phenomenon-atom.cation .phenomenon-nucleus{border-color:#ef4444;color:#b91c1c}
+.phenomenon-atom.anion .phenomenon-nucleus{border-color:#2563eb;color:#1d4ed8}
+.phenomenon-shell{position:absolute;inset:8px;border:1px dashed #94a3b8;border-radius:50%;opacity:.65}
+.outer-electron{position:absolute;left:50%;top:50%;width:25px;height:25px;border-radius:50%;background:#2563eb;color:#fff;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:800;transform:rotate(calc(var(--i) * 360deg / var(--n))) translateY(-40px) rotate(calc(var(--i) * -360deg / var(--n)));z-index:3}
+.free-electron{width:54px;height:54px;border-radius:50%;background:#dbeafe;border:3px solid #2563eb;color:#1d4ed8;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:900;box-shadow:0 3px 8px #0001;flex:none}
+.electron-pair{display:flex;gap:5px;align-items:center}
+.phenomenon-arrow{font-size:34px;font-weight:900;color:#475569;line-height:1}
+.phenomenon-plus{font-size:25px;font-weight:800;color:#64748b}
+.ion-pair{display:flex;gap:7px}
+.molecule-diagram{height:70px;min-width:112px;padding:0 12px;border:3px solid #16a34a;border-radius:18px;background:#f0fdf4;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:900;color:#166534}
+.molecule-diagram .bond{margin:0 4px;color:#166534;font-size:27px}
+.molecule-diagram.hydrogen{border-color:#0891b2;background:#ecfeff;color:#0e7490}
+.molecule-diagram.hydrogen .bond{color:#0e7490}
+@media(max-width:600px){.phenomenon-row{gap:7px}.phenomenon-atom{width:70px;height:70px}.phenomenon-nucleus{width:45px;height:45px;font-size:14px}.outer-electron{width:21px;height:21px;font-size:8px;transform:rotate(calc(var(--i) * 360deg / var(--n))) translateY(-33px) rotate(calc(var(--i) * -360deg / var(--n)))}.free-electron{width:46px;height:46px;font-size:12px}.phenomenon-arrow{font-size:27px}.phenomenon-plus{font-size:21px}}
+
+#reactionPhenomenon .reaction-phenomenon-diagram{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:12px;
+  flex-wrap:wrap;
+  min-height:85px;
+}
+#reactionPhenomenon .reaction-particle-group{
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+#reactionPhenomenon .reaction-particle{
+  min-width:52px;
+  height:52px;
+  padding:0 8px;
+  box-sizing:border-box;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-weight:800;
+  font-size:18px;
+  background:#f8fafc;
+  border:2px solid #64748b;
+}
+#reactionPhenomenon .reaction-particle.cation{
+  background:#fee2e2;
+  border-color:#ef4444;
+  color:#b91c1c;
+}
+#reactionPhenomenon .reaction-particle.anion{
+  background:#dbeafe;
+  border-color:#3b82f6;
+  color:#1d4ed8;
+}
+#reactionPhenomenon .reaction-particle.molecule{
+  min-width:76px;
+  border-radius:14px;
+  background:#fef3c7;
+  border-color:#f59e0b;
+}
+#reactionPhenomenon .reaction-electron-group{
+  display:flex;
+  gap:6px;
+  align-items:center;
+}
+#reactionPhenomenon .reaction-electron{
+  width:40px;
+  height:40px;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:#2563eb;
+  border:2px solid #1d4ed8;
+  color:#fff;
+  font-size:13px;
+  font-weight:800;
+}
+#reactionPhenomenon .reaction-symbol{
+  font-size:25px;
+  font-weight:800;
+}
+#reactionPhenomenon .reaction-symbol.arrow{
+  font-size:32px;
+}
+#reactionPhenomenon .reaction-phenomenon-title{
+  text-align:center;
+  font-weight:700;
+  margin-bottom:8px;
+}
+</style>
+</head>
+<body>
+<div class="app">
+<header class="header"><h1>🧪 イオン・周期表チャレンジ</h1><p>周期表・イオン・電子移動・化学反応式・電解質水溶液を体験しよう</p></header>
+
+<section id="home" class="screen active">
+<div class="card"><h2>ホーム</h2><div id="homeStats" class="stats"></div></div>
+<div class="home-grid">
+<button class="activity-card" onclick="showScreen('periodic')"><h3>① 周期表チャレンジ</h3><p>元素記号を周期表の正しい位置へ。</p></button>
+<button class="activity-card" onclick="showScreen('quiz')"><h3>② イオン一問一答</h3><p>10問セットを何度でも挑戦。</p></button>
+<button class="activity-card" onclick="showScreen('ionmake')"><h3>③ イオン生成</h3><p>電子を動かしてイオンをつくろう。</p></button>
+<button class="activity-card" onclick="showScreen('reaction')"><h3>④ イオンの化学反応式</h3><p>e⁻を含む反応式を入力。</p></button>
+<button class="activity-card" onclick="showScreen('electrolyte')"><h3>⑤ 電解質水溶液と電気</h3><p>溶解・電離・電極反応を観察。</p></button>
+</div></section>
+
+<section id="periodic" class="screen"><button class="back" onclick="showScreen('home')">← ホームへ</button><div class="card"><h2>周期表チャレンジ</h2><p id="periodicMessage" class="muted">下の元素をドラッグして、正しい位置へ置いてください。</p><div id="periodicBoard" class="periodic-board"></div><div id="elementBank" class="element-bank"></div><button class="primary" onclick="resetPeriodic()">リセット</button></div></section>
+
+<section id="quiz" class="screen"><button class="back" onclick="showScreen('home')">← ホームへ</button><div class="card"><h2>イオン一問一答</h2><div id="quizProgress"></div><div id="quizTarget" class="quiz-target"></div><input id="quizInput" class="input" readonly placeholder="下のキーボードで入力"><div id="quizKeyboard" class="keyboard"></div><div id="quizResult" class="quiz-result"></div><button id="quizCheckButton" class="primary" onclick="checkQuizAnswer()">判定</button> <button id="quizNextButton" class="success" onclick="nextQuiz()" style="display:none">次の問題</button></div></section>
+
+<section id="ionmake" class="screen"><button class="back" onclick="showScreen('home')">← ホームへ</button><div class="card"><h2>イオン生成（電子移動）</h2><p class="muted">元素を選び、青い電子をドラッグして動かします。元の最外殻電子を失うか、6・7個の元素が8個になることでイオン生成を判定します。</p><div id="elementButtons" class="element-bank"></div></div><div class="card atom-area"><div><div id="atomView" class="atom-view"><div class="nucleus" id="nucleus">原子</div></div><div id="particleCounts" class="particle-counts"><div>陽子：<strong id="protonCount">0</strong>個</div><div>電子：<strong id="electronCount">0</strong>個</div></div></div><div style="flex:1"><div class="make-controls"><div id="electronSource" class="source" draggable="true">＋ 電子を追加<br><small>クリックでも追加</small></div><div id="electronTrash" class="trash">🗑 電子をここへ<br><small>ドラッグして失う</small></div></div><div id="atomMessage" style="margin-top:15px"></div><div id="ionResult" class="ion-result" style="margin-top:15px"></div></div></div></section>
+
+<section id="reaction" class="screen"><button class="back" onclick="showScreen('home')">← ホームへ</button><div class="card"><h2>イオンの化学反応式</h2><div id="reactionQuestion" class="reaction-question"></div><div id="reactionPhenomenon" class="reaction-phenomenon"></div><input id="reactionInput" class="input" readonly placeholder="下のキーボードで入力"><div id="reactionKeyboard" class="keyboard"></div><div id="reactionResult" class="reaction-result"></div><button id="reactionCheckButton" class="primary" onclick="checkReactionAnswer()">判定</button> <button id="reactionNextButton" class="success" onclick="nextReaction()" style="display:none">次の問題</button></div></section>
+
+<section id="electrolyte" class="screen"><button class="back" onclick="showScreen('home')">← ホームへ</button><div class="card"><h2>電解質水溶液と電気</h2><p class="muted">①電解質を選ぶ → ②水に入れる → ③底に沈んでから溶ける → ④10秒待つ → ⑤電離 → ⑥電気を流す。</p><div class="solution-controls"><button class="solution-choice" onclick="selectSolution('CuCl2')">塩化銅 CuCl₂</button><button class="solution-choice" onclick="selectSolution('HCl')">塩酸 HCl</button><button id="dissolveButton" class="primary" onclick="startDissolving()" disabled>水に入れる</button><button id="electricButton" class="success" onclick="startElectricity()" disabled>⚡ 電気を流す</button><button class="back" onclick="resetElectrolyte()">リセット</button></div><div id="solutionMessage">電解質を選択してください。</div><div id="countdown" class="countdown"></div></div>
+<div class="card"><div class="beaker-wrap"><div id="beaker" class="beaker"><div class="circuit" aria-label="外部回路">
+  <div class="battery">
+    <div class="battery-title">電源装置</div>
+    <div class="battery-terminals"><span class="terminal minus">−</span><span class="terminal plus">＋</span></div>
+  </div>
+  <div class="wire neg-h"></div><div class="wire neg-v"></div>
+  <div class="wire pos-h"></div><div class="wire pos-v"></div>
+  <div class="wire-label neg-label">−端子 → 陰極</div>
+  <div class="wire-label pos-label">陽極 → ＋端子</div>
+  <div class="flow-label">電子 e⁻ の流れ</div>
+</div><div class="electrode cathode" id="cathode"><div class="copper-layer" id="copperLayer"></div><div class="electrode-label">陰極<br>−<small>電子を受け取る</small></div></div><div class="electrode anode" id="anode"><div class="electrode-label">陽極<br>＋<small>電子を渡す</small></div></div><div id="soluteLayer"></div></div></div><div id="electrolyteReaction" class="reaction-box">まだ電解質が入っていません。</div></div></section>
+</div>
+
+<script>
+'use strict';
+
+const E=[[1,'H','水素',1,1],[2,'He','ヘリウム',18,1],[3,'Li','リチウム',1,2],[4,'Be','ベリリウム',2,2],[5,'B','ホウ素',13,2],[6,'C','炭素',14,2],[7,'N','窒素',15,2],[8,'O','酸素',16,2],[9,'F','フッ素',17,2],[10,'Ne','ネオン',18,2],[11,'Na','ナトリウム',1,3],[12,'Mg','マグネシウム',2,3],[13,'Al','アルミニウム',13,3],[14,'Si','ケイ素',14,3],[15,'P','リン',15,3],[16,'S','硫黄',16,3],[17,'Cl','塩素',17,3],[18,'Ar','アルゴン',18,3],[19,'K','カリウム',1,4],[20,'Ca','カルシウム',2,4]];
+const I=[['H⁺','水素イオン'],['Na⁺','ナトリウムイオン'],['K⁺','カリウムイオン'],['Mg²⁺','マグネシウムイオン'],['Ca²⁺','カルシウムイオン'],['Al³⁺','アルミニウムイオン'],['NH₄⁺','アンモニウムイオン'],['Cl⁻','塩化物イオン'],['OH⁻','水酸化物イオン'],['NO₃⁻','硝酸イオン'],['SO₄²⁻','硫酸イオン'],['CO₃²⁻','炭酸イオン'],['O²⁻','酸化物イオン'],['S²⁻','硫化物イオン']];
+const outerMap={1:1,2:2,3:1,4:2,5:3,6:4,7:5,8:6,9:7,10:8,11:1,12:2,13:3,14:4,15:5,16:6,17:7,18:8};
+const ionInfo={1:{name:'水素イオン',formula:'H⁺',mode:'lose'},2:{name:'ヘリウム原子',formula:'He',mode:'none'},3:{name:'リチウムイオン',formula:'Li⁺',mode:'lose'},4:{name:'ベリリウムイオン',formula:'Be²⁺',mode:'lose'},5:{name:'ホウ素イオン',formula:'B³⁺',mode:'lose'},6:{name:'炭素イオン',formula:'C⁴⁺',mode:'lose'},7:{name:'窒素イオン',formula:'N⁵⁺',mode:'lose'},8:{name:'酸化物イオン',formula:'O²⁻',mode:'gain'},9:{name:'フッ化物イオン',formula:'F⁻',mode:'gain'},10:{name:'ネオン原子',formula:'Ne',mode:'none'},11:{name:'ナトリウムイオン',formula:'Na⁺',mode:'lose'},12:{name:'マグネシウムイオン',formula:'Mg²⁺',mode:'lose'},13:{name:'アルミニウムイオン',formula:'Al³⁺',mode:'lose'},14:{name:'ケイ素イオン',formula:'Si⁴⁺',mode:'lose'},15:{name:'リンイオン',formula:'P⁵⁺',mode:'lose'},16:{name:'硫化物イオン',formula:'S²⁻',mode:'gain'},17:{name:'塩化物イオン',formula:'Cl⁻',mode:'gain'},18:{name:'アルゴン原子',formula:'Ar',mode:'none'}};
+const statsKey='ionPeriodicStatsV3';
+let stats=JSON.parse(localStorage.getItem(statsKey)||'null')||{total:0,correct:0,p:{total:0,correct:0},q:{total:0,correct:0},i:{total:0,correct:0},r:{total:0,correct:0},e:{total:0,correct:0}};
+function saveStats(){localStorage.setItem(statsKey,JSON.stringify(stats))}function record(k,ok){stats.total++;stats[k].total++;if(ok){stats.correct++;stats[k].correct++}saveStats();updateHomeStats()}function updateHomeStats(){const h=document.getElementById('homeStats');if(h)h.innerHTML=`<div class="stat">総合 ${stats.correct}/${stats.total}</div><div class="stat">周期表 ${stats.p.correct}/${stats.p.total}</div><div class="stat">一問一答 ${stats.q.correct}/${stats.q.total}</div><div class="stat">イオン生成 ${stats.i.correct}/${stats.i.total}</div><div class="stat">反応式 ${stats.r.correct}/${stats.r.total}</div><div class="stat">電解質 ${stats.e.correct}/${stats.e.total}</div>`}
+function showScreen(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));const target=document.getElementById(id);if(target)target.classList.add('active');window.scrollTo({top:0,behavior:'smooth'});if(id==='periodic')resetPeriodic();if(id==='quiz'&&!quizStarted)startQuiz();if(id==='reaction'&&!reactionStarted)startReaction();if(id==='ionmake'&&!selectedElement)selectAtom(1);if(id==='electrolyte'&&!electrolyteInitialized)resetElectrolyte()}
+
+function resetPeriodic(){
+  const board=document.getElementById('periodicBoard');
+  const bank=document.getElementById('elementBank');
+  board.innerHTML='';
+  bank.innerHTML='';
+
+  for(let g=1;g<=18;g++){
+    const h=document.createElement('div');
+    h.className='group-number';
+    h.textContent=g+'族';
+    board.appendChild(h);
+  }
+
+  for(let p=1;p<=4;p++){
+    for(let g=1;g<=18;g++){
+      const c=document.createElement('div');
+      c.className='pt-cell';
+      const e=E.find(x=>x[4]===p&&x[3]===g);
+      if(e){
+        c.classList.add('target');
+        c.dataset.z=e[0];
+        c.innerHTML=`<span>${e[0]}</span><br><b>？</b>`;
+        c.ondragover=e=>e.preventDefault();
+        c.ondrop=ev=>dropElement(e[0],c,ev);
+      }else{
+        c.classList.add('empty-cell');
+        c.innerHTML='<span style="color:#cbd5e1">・</span>';
+      }
+      board.appendChild(c);
+    }
+  }
+
+  E.forEach(e=>{
+    const b=document.createElement('button');
+    b.className='element-button';
+    b.draggable=true;
+    b.dataset.z=e[0];
+    b.innerHTML=`<strong>${e[1]}</strong><br><small>${e[2]}</small>`;
+    b.ondragstart=ev=>ev.dataTransfer.setData('text/plain',e[0]);
+    bank.appendChild(b);
+  });
+}
+
+function dropElement(z,cell,ev){const draggedZ=Number(ev.dataTransfer.getData('text/plain'));if(draggedZ===z){cell.classList.add('correct');const e=E.find(x=>x[0]===z);cell.innerHTML=`<strong>${e[1]}</strong><br><small>${e[2]}</small>`;const b=document.querySelector(`.element-button[data-z="${z}"]`);if(b)b.classList.add('used');record('p',true);document.getElementById('periodicMessage').textContent='⭕ 正解！';}else{cell.classList.add('wrong');setTimeout(()=>cell.classList.remove('wrong'),350);record('p',false);document.getElementById('periodicMessage').textContent='❌ 位置が違います。'}}
+
+const sup={'0':'⁰','1':'¹','2':'²','3':'³','4':'⁴','5':'⁵','6':'⁶','7':'⁷','8':'⁸','9':'⁹'};
+function normalizeText(s){return s.trim().replace(/\s/g,'').replace(/−/g,'-').replace(/[⁰¹²³⁴⁵⁶⁷⁸⁹⁺⁻]/g,m=>({'⁰':'0','¹':'1','²':'2','³':'3','⁴':'4','⁵':'5','⁶':'6','⁷':'7','⁸':'8','⁹':'9','⁺':'+','⁻':'-'}[m]||m)).toLowerCase()}
+function normalizeReaction(s){return s.replace(/\s/g,'').replace(/−/g,'-').replace(/→|⟶/g,'->').replace(/[₀₁₂₃₄₅₆₇₈₉]/g,m=>({'₀':'0','₁':'1','₂':'2','₃':'3','₄':'4','₅':'5','₆':'6','₇':'7','₈':'8','₉':'9'}[m]||m))}
+let quizQuestions=[],quizIndex=0,quizScore=0,quizAnswered=false,quizStarted=false;
+function shuffle(a){return [...a].sort(()=>Math.random()-.5)}function startQuiz(){quizStarted=true;quizQuestions=shuffle(I).slice(0,10);quizIndex=0;quizScore=0;renderQuiz()}
+function renderQuiz(){const q=quizQuestions[quizIndex];document.getElementById('quizProgress').textContent=`${quizIndex+1} / 10 問`;document.getElementById('quizTarget').textContent=`「${q[1]}」のイオン式を入力してください。`;document.getElementById('quizInput').value='';document.getElementById('quizResult').textContent='';document.getElementById('quizCheckButton').style.display='inline-block';document.getElementById('quizNextButton').style.display='none';quizAnswered=false;buildKeyboard('quizKeyboard','quizInput')}
+function checkQuizAnswer(){if(quizAnswered)return;const input=document.getElementById('quizInput').value;if(!input){document.getElementById('quizResult').textContent='答えを入力してください。';return}const ok=normalizeText(input)===normalizeText(quizQuestions[quizIndex][0]);quizAnswered=true;record('q',ok);if(ok){quizScore++;document.getElementById('quizResult').innerHTML='⭕ 正解！'}else document.getElementById('quizResult').innerHTML=`❌ 不正解　正解：<strong>${quizQuestions[quizIndex][0]}</strong>`;document.getElementById('quizCheckButton').style.display='none';const n=document.getElementById('quizNextButton');n.style.display='inline-block';n.textContent=quizIndex===9?'もう一度挑戦':'次の問題'}
+function nextQuiz(){if(quizIndex===9){startQuiz()}else{quizIndex++;renderQuiz()}}
+
+let keyboardUpper=true;
+function buildKeyboard(kid,iid){const k=document.getElementById(kid);k.innerHTML='';const state=document.createElement('div');state.className='case-state';state.id=kid+'State';k.appendChild(state);updateCaseState(kid);const rows=[['Q','W','E','R','T','Y','U','I','O','P'],['A','S','D','F','G','H','J','K','L'],['Z','X','C','V','B','N','M'],['+','−','0','1','2','3','4','5','6','7','8','9'],['⁺','⁻','⁰','¹','²','³','⁴','⁵','⁶','⁷','⁸','⁹'],['₀','₁','₂','₃','₄','₅','₆','₇','₈','₉'],['e⁻','→','←','⇄','(',')']];rows.forEach((row,idx)=>{const d=document.createElement('div');d.className='keyrow';if(idx===5){const label=document.createElement('span');label.className='keyboard-label';label.textContent='下付き数字';d.appendChild(label)}row.forEach(x=>{const b=document.createElement('button');b.className='key';b.textContent=x;b.onclick=()=>insertKeyboardText(iid,x);d.appendChild(b)});k.appendChild(d)});const ar=document.createElement('div');ar.className='keyrow';const c=document.createElement('button');c.className='key action';c.textContent='大文字/小文字';c.onclick=()=>{keyboardUpper=!keyboardUpper;updateCaseState(kid)};const back=document.createElement('button');back.className='key action';back.textContent='⌫';back.onclick=()=>{const x=document.getElementById(iid);x.value=x.value.slice(0,-1)};const clear=document.createElement('button');clear.className='key action';clear.textContent='全部消す';clear.onclick=()=>document.getElementById(iid).value='';ar.append(c,back,clear);k.appendChild(ar)}
+function updateCaseState(kid){const s=document.getElementById(kid+'State');if(s)s.textContent=keyboardUpper?'現在：大文字':'現在：小文字'}function insertKeyboardText(iid,text){let v=text;if(/^[A-Za-z]$/.test(v))v=keyboardUpper?v.toUpperCase():v.toLowerCase();document.getElementById(iid).value+=v}
+
+let selectedElement=null,makeState={counts:[],originalOuter:0,mode:'none',completed:false};
+function buildMakeTable(){const a=document.getElementById('elementButtons');a.innerHTML='';E.forEach(e=>{const b=document.createElement('button');b.className='element-button';if([2,10,18].includes(e[0]))b.classList.add('noble-gas');b.innerHTML=`<strong>${e[1]}</strong><br><small>${e[2]}</small>`;b.onclick=()=>selectAtom(e[0]);a.appendChild(b)})}
+function initialShells(z){if(z<=2)return[z];if(z<=10)return[2,z-2];return[2,8,z-10]}
+function updateParticleCounts(){if(!selectedElement)return;const electrons=makeState.counts.reduce((a,b)=>a+b,0);document.getElementById('protonCount').textContent=selectedElement[0];document.getElementById('electronCount').textContent=electrons}
+function selectAtom(z){selectedElement=E.find(x=>x[0]===z);makeState={counts:initialShells(z),originalOuter:outerMap[z],mode:ionInfo[z].mode,completed:false};const stable=makeState.mode==='none';document.getElementById('electronSource').classList.toggle('disabled',stable);document.getElementById('electronTrash').classList.toggle('disabled',stable);renderAtom();const info=ionInfo[z];if(stable){document.getElementById('atomMessage').textContent=`${selectedElement[1]}（${selectedElement[2]}）は最初から電子配置が安定しているため、イオンにはなりません。`;document.getElementById('ionResult').innerHTML='<strong>安定な原子（希ガス）</strong><br><span class="ion-formula">イオンにはなりません</span>';}else{document.getElementById('atomMessage').textContent=`${selectedElement[1]}（${selectedElement[2]}）を選択しました。電子を移動させてください。`;document.getElementById('ionResult').textContent=''}}
+function renderAtom(){const v=document.getElementById('atomView');v.classList.remove('charge-positive','charge-negative');if(selectedElement&&makeState.mode!=='none'){const electrons=makeState.counts.reduce((a,b)=>a+b,0);const charge=selectedElement[0]-electrons;if(charge>0)v.classList.add('charge-positive');else if(charge<0)v.classList.add('charge-negative')}v.innerHTML='<div class="nucleus" id="nucleus">'+selectedElement[1]+'</div>';const visible=makeState.counts.length;for(let s=0;s<visible;s++){const ring=document.createElement('div');ring.className='shell';const size=130+s*82;ring.style.width=size+'px';ring.style.height=size+'px';v.appendChild(ring);const n=makeState.counts[s];for(let j=0;j<n;j++){const e=document.createElement('div');e.className='electron';e.textContent='e⁻';const angle=(Math.PI*2*j/n)-Math.PI/2;e.style.left=`calc(50% + ${Math.cos(angle)*(size/2)}px)`;e.style.top=`calc(50% + ${Math.sin(angle)*(size/2)}px)`;if(s===visible-1&&makeState.mode!=='none'){e.draggable=true;e.dataset.shell=s;e.ondragstart=ev=>ev.dataTransfer.setData('electron-shell',String(s));e.onclick=()=>removeElectron()}v.appendChild(e)}}updateParticleCounts()}
+function addElectron(){if(!selectedElement||makeState.mode==='none'){if(selectedElement&&makeState.mode==='none')document.getElementById('atomMessage').textContent=`${selectedElement[1]}は電子配置が安定しているため、イオンにはなりません。`;return}const last=makeState.counts.length-1;if(makeState.mode==='gain'&&makeState.counts[last]<8){makeState.counts[last]++;makeState.completed=false;renderAtom();evaluateIon()}else if(makeState.mode==='gain'){evaluateIon()}else document.getElementById('atomMessage').textContent='この元素では電子を追加する操作は使いません。'}
+function removeElectron(){if(!selectedElement||makeState.mode!=='lose')return;const last=makeState.counts.length-1;if(makeState.counts[last]>0){makeState.counts[last]--;makeState.completed=false;renderAtom();evaluateIon()}}
+function evaluateIon(){const result=document.getElementById('ionResult');const info=ionInfo[selectedElement[0]];if(info.mode==='none'){result.textContent='安定な原子（希ガス）';return}let formed=false;if(info.mode==='lose'&&makeState.counts.length>0&&makeState.counts[makeState.counts.length-1]===0)formed=true;if(info.mode==='lose'&&makeState.counts.length===0)formed=true;if(info.mode==='gain'&&makeState.counts[makeState.counts.length-1]===8)formed=true;if(formed){result.innerHTML=`<strong>${info.name}ができました。</strong><br><span class="ion-formula">${info.formula}</span>`;document.getElementById('atomMessage').textContent=`電子配置が安定し、${info.name}ができました。`;if(!makeState.completed){makeState.completed=true;record('i',true)}}else{result.textContent='';}}
+document.getElementById('electronSource').onclick=addElectron;document.getElementById('electronSource').ondragstart=e=>e.dataTransfer.setData('add-electron','1');document.getElementById('electronTrash').ondragover=e=>e.preventDefault();document.getElementById('electronTrash').ondrop=e=>{if(e.dataTransfer.getData('electron-shell'))removeElectron()};document.getElementById('electronTrash').onclick=removeElectron;
+
+const reactions=[{question:'ナトリウム原子が電子を1個失ってナトリウムイオンになる反応式',answer:'Na → Na⁺ + e⁻'},{question:'マグネシウム原子が電子を2個失ってマグネシウムイオンになる反応式',answer:'Mg → Mg²⁺ + 2e⁻'},{question:'塩素原子が電子を1個受け取って塩化物イオンになる反応式',answer:'Cl + e⁻ → Cl⁻'},{question:'酸素原子が電子を2個受け取って酸化物イオンになる反応式',answer:'O + 2e⁻ → O²⁻'},{question:'銅イオンが電子を2個受け取って銅になる反応式',answer:'Cu²⁺ + 2e⁻ → Cu'},{question:'塩化物イオン2個から塩素分子ができる反応式',answer:'2Cl⁻ → Cl₂ + 2e⁻'},{question:'水素イオン2個から水素分子ができる反応式',answer:'2H⁺ + 2e⁻ → H₂'}];let reactionIndex=0,reactionAnswered=false,reactionStarted=false;
+function renderReactionPhenomenon(){
+  const box=document.getElementById('reactionPhenomenon');
+  if(!box)return;
+
+  const data=[
+    {title:'ナトリウム原子が電子を1個失う',left:['Na'],e:1,receive:false,right:['Na⁺']},
+    {title:'マグネシウム原子が電子を2個失う',left:['Mg'],e:2,receive:false,right:['Mg²⁺']},
+    {title:'塩素原子が電子を1個受け取る',left:['Cl'],e:1,receive:true,right:['Cl⁻']},
+    {title:'酸素原子が電子を2個受け取る',left:['O'],e:2,receive:true,right:['O²⁻']},
+    {title:'銅イオンが電子を2個受け取る',left:['Cu²⁺'],e:2,receive:true,right:['Cu']},
+    {title:'塩化物イオン2個が電子を1個ずつ失う',left:['Cl⁻','Cl⁻'],e:2,receive:false,right:['Cl₂']},
+    {title:'水素イオン2個が電子を1個ずつ受け取る',left:['H⁺','H⁺'],e:2,receive:true,right:['H₂']}
+  ];
+
+  const d=data[reactionIndex]||data[0];
+  const particle=(x)=>{
+    const cls=x.includes('⁺')?'cation':x.includes('⁻')?'anion':
+      (x==='H₂'||x==='Cl₂')?'molecule':'atom';
+    return `<div class="reaction-particle ${cls}">${x}</div>`;
+  };
+  const electrons=Array.from({length:d.e},()=>`<div class="reaction-electron">e⁻</div>`).join('');
+  const left=d.left.map(particle).join('');
+  const right=d.right.map(particle).join('');
+
+  box.innerHTML=`
+    <div class="reaction-phenomenon-title">${d.title}</div>
+    <div class="reaction-phenomenon-diagram">
+      <div class="reaction-particle-group">${left}</div>
+      ${d.receive ? '<div class="reaction-symbol">＋</div><div class="reaction-electron-group">'+electrons+'</div><div class="reaction-symbol arrow">→</div>'
+                   : '<div class="reaction-symbol arrow">→</div><div class="reaction-electron-group">'+electrons+'</div><div class="reaction-symbol">＋</div>'}
+      <div class="reaction-particle-group">${right}</div>
+    </div>`;
+}
+
+function startReaction(){
+  reactionStarted=true;
+  reactionIndex=0;
+  reactionAnswered=false;
+  renderReaction();
+}
+
+function renderReaction(){const q=reactions[reactionIndex];document.getElementById('reactionQuestion').textContent=q.question;renderReactionPhenomenon();document.getElementById('reactionInput').value='';document.getElementById('reactionResult').textContent='';document.getElementById('reactionCheckButton').style.display='inline-block';document.getElementById('reactionNextButton').style.display='none';reactionAnswered=false;buildKeyboard('reactionKeyboard','reactionInput')}function checkReactionAnswer(){if(reactionAnswered)return;const q=reactions[reactionIndex],ok=normalizeReaction(document.getElementById('reactionInput').value)===normalizeReaction(q.answer);reactionAnswered=true;record('r',ok);document.getElementById('reactionResult').innerHTML=ok?'⭕ 正解！':`❌ 不正解<br>正解：<strong>${q.answer}</strong>`;document.getElementById('reactionCheckButton').style.display='none';document.getElementById('reactionNextButton').style.display='inline-block';document.getElementById('reactionNextButton').textContent=reactionIndex===reactions.length-1?'最初から':'次の問題'}function nextReaction(){reactionIndex=reactionIndex===reactions.length-1?0:reactionIndex+1;renderReaction()}
+
+let selectedSolution=null,solutionState='none',electrolyteTimers=[],countdownTimer=null,electrolyteInitialized=false;
+function clearElectrolyteTimers(){electrolyteTimers.forEach(clearTimeout);electrolyteTimers=[];if(countdownTimer){clearInterval(countdownTimer);countdownTimer=null}}
+function timer(fn,ms){const t=setTimeout(fn,ms);electrolyteTimers.push(t);return t}
+function clearElectrolyteObjects(){document.querySelectorAll('#soluteLayer .solute,#beaker .electron-flow,#beaker .deposit,#beaker .gas,#beaker .gas-bubble').forEach(x=>x.remove());}
+function drawWaterMolecules(){const layer=document.getElementById('soluteLayer');for(let i=0;i<42;i++){const w=document.createElement('div');w.className='water-molecule';w.style.left=(14+Math.random()*72)+'%';w.style.top=(17+Math.random()*72)+'%';w.style.animationDelay=(Math.random()*2)+'s';layer.appendChild(w)}}
+function selectSolution(type){if(!['none','selected'].includes(solutionState))return;selectedSolution=type;solutionState='selected';document.querySelectorAll('.solution-choice').forEach(b=>b.classList.toggle('selected',b.textContent.includes(type==='CuCl2'?'塩化銅':'塩酸')));document.getElementById('dissolveButton').disabled=false;document.getElementById('electricButton').disabled=true;document.getElementById('solutionMessage').textContent=(type==='CuCl2'?'塩化銅 CuCl₂':'塩酸 HCl')+'を選択しました。';document.getElementById('electrolyteReaction').textContent='電解質を水に入れてください。';}
+function startDissolving(){if(!selectedSolution||solutionState!=='selected')return;clearElectrolyteTimers();solutionState='settling';document.getElementById('dissolveButton').disabled=true;document.querySelectorAll('.solution-choice').forEach(b=>b.disabled=true);const layer=document.getElementById('soluteLayer');layer.querySelectorAll('.solute').forEach(x=>x.remove());const count=selectedSolution==='CuCl2'?18:12;for(let i=0;i<count;i++){const p=document.createElement('div');p.className='solute molecule';p.textContent=selectedSolution==='CuCl2'?'CuCl₂':'HCl';p.dataset.species=selectedSolution;p.style.left=(39+(i%6)*4)+'%';p.style.top=(78+Math.floor(i/6)*4.5)+'%';p.style.opacity='0.98';layer.appendChild(p)}document.getElementById('solutionMessage').textContent='① 電解質が水の底に沈んで固まりました。';timer(beginDissolving,1400)}
+function beginDissolving(){solutionState='dissolving';document.getElementById('solutionMessage').textContent='② 底の電解質が少しずつ水に溶けています。';const ps=[...document.querySelectorAll('.solute.molecule')];ps.forEach((p,i)=>{p.style.left=(14+Math.random()*72)+'%';p.style.top=(14+Math.random()*72)+'%';p.style.transform='scale(.82)'});timer(()=>startIonCountdown(),3900)}
+function startIonCountdown(){solutionState='waiting';let n=10;document.getElementById('solutionMessage').textContent='③ 電解質が水中に均一に溶けました。電離まで待ちます。';document.getElementById('countdown').textContent=n+'秒';countdownTimer=setInterval(()=>{n--;document.getElementById('countdown').textContent=n>0?n+'秒':'';if(n<=0){clearInterval(countdownTimer);countdownTimer=null;ionizeSolution()}},1000)}
+function ionizeSolution(){solutionState='ionized';document.getElementById('countdown').textContent='';const layer=document.getElementById('soluteLayer');layer.querySelectorAll('.solute.molecule').forEach(x=>x.remove());if(selectedSolution==='CuCl2'){for(let i=0;i<6;i++)createIon('Cu²⁺','cation');for(let i=0;i<12;i++)createIon('Cl⁻','anion')}else{for(let i=0;i<10;i++)createIon('H⁺','cation');for(let i=0;i<10;i++)createIon('Cl⁻','anion')}document.getElementById('solutionMessage').textContent='④ 電離しました。水分子もそのまま水中に残っています。これで電気を流せます。';document.getElementById('electricButton').disabled=false;document.getElementById('electrolyteReaction').innerHTML='<strong>水分子（○）</strong>と、電離した<strong>陽イオン・陰イオン</strong>が同時に水中に存在しています。'}
+function createIon(text,type){const p=document.createElement('div');p.className='solute '+type;p.textContent=text;p.dataset.species=text;p.dataset.state='ion';p.style.left=(14+Math.random()*72)+'%';p.style.top=(14+Math.random()*72)+'%';document.getElementById('soluteLayer').appendChild(p)}
+function moveIonTo(p,left,top){if(!p)return; p.style.transition='left .55s ease, top .55s ease, transform .35s ease, opacity .35s ease'; p.style.left=left; p.style.top=top; p.style.transform='scale(1.05)'}
+function reserveIon(p){if(p)p.dataset.state='reacting';return p}
+function consumeIon(p){if(p&&p.parentElement){p.dataset.state='consumed';p.style.opacity='0';p.style.transform='scale(.2)';timer(()=>p.remove(),450)}}
+function pickIons(type,n){return [...document.querySelectorAll('#soluteLayer .solute.'+type)].filter(x=>x.dataset.state==='ion').slice(0,n)}
+function moveCircuitElectron(side,delay){timer(()=>{const e=document.createElement('div');e.className='electron-flow circuit-electron';e.textContent='e⁻';const beaker=document.getElementById('beaker');e.style.transition='none';if(side==='toCathode'){e.style.left='42%';e.style.top='31px';beaker.appendChild(e);requestAnimationFrame(()=>{e.style.transition='left .55s linear, top .55s linear';e.style.left='8.2%';e.style.top='31px';});timer(()=>{e.style.left='8.2%';e.style.top='145px'},600);}else{e.style.left='91%';e.style.top='145px';beaker.appendChild(e);requestAnimationFrame(()=>{e.style.transition='left .55s linear, top .55s linear';e.style.left='91%';e.style.top='31px';});timer(()=>{e.style.left='58%';e.style.top='31px'},600);}timer(()=>e.remove(),1350)},delay)}
+function stepElectronToCathode(ion, stageLabel, done){
+  moveCircuitElectron('toCathode',0);
+  timer(()=>{
+    if(ion && ion.isConnected){
+      ion.textContent=stageLabel;
+      ion.classList.add('electron-received');
+    }
+    if(done) done();
+  },900);
+}
+function stepElectronToAnode(ion, stageLabel, done){
+  moveCircuitElectron('toBattery',0);
+  timer(()=>{
+    if(ion && ion.isConnected){
+      ion.textContent=stageLabel;
+      ion.classList.add('electron-given');
+    }
+    if(done) done();
+  },900);
+}
+function finishMessage(html){document.getElementById('electrolyteReaction').innerHTML=html}
+function scheduleCuReaction(index, done){
+  const cu=pickIons('cation',1)[0];
+  if(!cu){if(done)done();return}
+  reserveIon(cu);
+  const y=300+index*8;
+  moveIonTo(cu,'9%',y+'px');
+  timer(()=>{
+    finishMessage('<strong>Cu²⁺を1個、反応させます。</strong><br>このCu²⁺に必要な電子2個を受け取り、Cu原子になります。');
+    moveCircuitElectron('toCathode',0);
+    moveCircuitElectron('toCathode',120);
+    timer(()=>{
+      if(cu&&cu.isConnected){
+        cu.textContent='Cu';
+        cu.classList.add('electron-received');
+      }
+      consumeIon(cu);
+      updateCopperPlating((index+1)/6*100);
+      finishMessage('<strong>Cu²⁺ 1個の反応が完了しました。</strong><br>電子2個を受け取り、Cu原子になって陰極に付着しました。<br><span class="muted">この反応が終わったので、次のCu²⁺へ進みます。</span>');
+      timer(()=>{if(done)done()},1800);
+    },1500);
+  },900);
+}
+function scheduleHReaction(index, done){
+  const hs=pickIons('cation',2);
+  if(hs.length<2){if(done)done();return}
+  hs.forEach((h,i)=>{
+    reserveIon(h);
+    moveIonTo(h,i===0?'10%':'16%',(285+index*7)+'px');
+  });
+
+  timer(()=>{
+    finishMessage(
+      '<strong>H⁺を2個、同時に反応させます。</strong><br>'+
+      '2個のH⁺がそれぞれ電子を1個ずつ受け取り、H₂になります。'
+    );
+
+    moveCircuitElectron('toCathode',0);
+    moveCircuitElectron('toCathode',120);
+
+    timer(()=>{
+      hs.forEach(h=>{
+        if(h&&h.isConnected){
+          h.textContent='H';
+          h.classList.add('electron-received');
+        }
+        consumeIon(h);
+      });
+
+      createGas('H₂',10,285+index*7);
+
+      finishMessage(
+        '<strong>H₂ができました。</strong><br>'+
+        'H⁺ 2個がそれぞれ電子を1個ずつ受け取り、H₂として発生しました。<br>'+
+        '<span class="muted">電子2個が回路から陰極へ流れています。</span>'
+      );
+
+      timer(()=>{if(done)done()},1800);
+    },1500);
+  },900);
+}
+function scheduleChlorideReaction(index, done){
+  const cls=pickIons('anion',2);
+  if(cls.length<2){if(done)done();return}
+  cls.forEach((cl,i)=>{
+    reserveIon(cl);
+    moveIonTo(cl,i===0?'76%':'84%',(205+index*7)+'px');
+  });
+
+  timer(()=>{
+    finishMessage(
+      '<strong>Cl⁻を2個、同時に反応させます。</strong><br>'+
+      '2個のCl⁻がそれぞれ電子を1個ずつ放出し、2個の電子が回路へ流れます。'
+    );
+
+    moveCircuitElectron('toAnode',0);
+    moveCircuitElectron('toAnode',120);
+
+    timer(()=>{
+      cls.forEach(cl=>{
+        if(cl&&cl.isConnected){
+          cl.textContent='Cl';
+          cl.classList.add('electron-given');
+        }
+        consumeIon(cl);
+      });
+
+      createGas('Cl₂',80,205+index*7);
+
+      finishMessage(
+        '<strong>Cl₂ができました。</strong><br>'+
+        'Cl⁻ 2個がそれぞれ電子を1個ずつ放出し、Cl₂になりました。<br>'+
+        '<span class="muted">2個の電子が回路に流れたので、電子の数も一致します。</span>'
+      );
+
+      timer(()=>{if(done)done()},1800);
+    },1500);
+  },900);
+}
+function runReactionQueue(total, fn, finalMessage){
+  let index = 0;
+  const next = () => {
+    if(index >= total){
+      if(finalMessage) finishMessage(finalMessage);
+      return;
+    }
+    const current = index++;
+    fn(current, next);
+  };
+  next();
+}
+
+function runParallelReactionQueues(total, cathodeFn, anodeFn, finalMessage){
+  let index = 0;
+
+  const nextPair = () => {
+    if(index >= total){
+      if(finalMessage) finishMessage(finalMessage);
+      return;
+    }
+
+    const current = index++;
+    let cathodeDone = false;
+    let anodeDone = false;
+    let advanced = false;
+
+    const checkBothDone = () => {
+      if(advanced || !cathodeDone || !anodeDone) return;
+      advanced = true;
+      timer(nextPair, 100);
+    };
+
+    cathodeFn(current, () => {
+      cathodeDone = true;
+      checkBothDone();
+    });
+
+    anodeFn(current, () => {
+      anodeDone = true;
+      checkBothDone();
+    });
+  };
+
+  nextPair();
+}
+
+function showElectrodeReactions(){
+  if(selectedSolution==='CuCl2'){
+    finishMessage(
+      '<strong>陰極と陽極の反応を同時に進めます。</strong><br>'+
+      '陰極ではCu²⁺ 1個が電子2個を受け取り、陽極ではCl⁻ 2個が電子2個を放出します。'
+    );
+
+    runParallelReactionQueues(
+      6,
+      scheduleCuReaction,
+      scheduleChlorideReaction,
+      '<strong>電極反応がすべて完了しました。</strong><br>陰極でCuが、陽極でCl₂ができました。'
+    );
+  }else{
+    finishMessage(
+      '<strong>陰極と陽極の反応を同時に進めます。</strong><br>'+
+      '陰極ではH⁺ 2個が電子2個を受け取り、陽極ではCl⁻ 2個が電子2個を放出します。'
+    );
+
+    runParallelReactionQueues(
+      5,
+      scheduleHReaction,
+      scheduleChlorideReaction,
+      '<strong>電極反応がすべて完了しました。</strong><br>陰極でH₂が、陽極でCl₂ができました。'
+    );
+  }
+}
+
+function updateCopperPlating(percent){
+  const layer = document.getElementById('copperLayer');
+  if(!layer) return;
+  const p = Math.max(0, Math.min(100, percent));
+  layer.style.height = p === 0 ? '0' : `calc(${p}% - 10px)`;
+  layer.classList.toggle('active', p > 0);
+}
+
+function createGas(label,left,bottom){const g=document.createElement('div');g.className='gas';g.textContent=label;g.style.left=left+'%';g.style.top=(bottom)+'px';document.getElementById('beaker').appendChild(g);requestAnimationFrame(()=>{g.style.top='90px';g.style.opacity='0'});timer(()=>g.remove(),2200)}
+function startElectricity(){
+  if(solutionState !== 'ionized') return;
+
+  clearElectrolyteTimers();
+  solutionState = 'reacting';
+
+  const electricButton = document.getElementById('electricButton');
+  const dissolveButton = document.getElementById('dissolveButton');
+
+  electricButton.disabled = true;
+  dissolveButton.disabled = true;
+
+  document.querySelectorAll('.solution-choice').forEach(b => b.disabled = true);
+  document.getElementById('cathode').classList.add('powered');
+  document.getElementById('anode').classList.add('powered');
+
+  document.getElementById('solutionMessage').textContent =
+    '⑤ 電気を流しました。H⁺は陰極へ、Cl⁻は陽極へ移動し、H⁺は2個ずつ、Cl⁻は2個ずつ反応します。';
+
+  showElectrodeReactions();
+}
+
+function resetElectrolyte(){clearElectrolyteTimers();electrolyteInitialized=true;selectedSolution=null;solutionState='none';document.getElementById('dissolveButton').disabled=true;document.getElementById('electricButton').disabled=true;document.querySelectorAll('.solution-choice').forEach(b=>{b.disabled=false;b.classList.remove('selected')});document.getElementById('solutionMessage').textContent='電解質を選択してください。';document.getElementById('countdown').textContent='';document.getElementById('electrolyteReaction').textContent='まだ電解質が入っていません。';document.getElementById('cathode').classList.remove('powered');document.getElementById('anode').classList.remove('powered');updateCopperPlating(0);clearElectrolyteObjects();drawWaterMolecules()}
+
+document.addEventListener('DOMContentLoaded',()=>{updateHomeStats();resetPeriodic();buildMakeTable();selectAtom(1);startReaction();resetElectrolyte()});
+</script>
+</body>
+</html>
